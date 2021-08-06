@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://kit.fontawesome.com/e636c2e107.js" crossorigin="anonymous"></script>
+
+  <!-- Jquery needed -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<!-- Function used to shrink nav bar removing paddings and adding black background -->
+  <script>
+      $(window).scroll(function() {
+          if ($(document).scrollTop() > 50) {
+              $('.nav').addClass('affix');
+          } else {
+              $('.nav').removeClass('affix');
+          }
+      });
+
+      $(window).on("load", function() {
+  //console.log(view);
+  $(".o-card_headerHeroImg").each(function() {
+    var bg = $(this).attr("data-image");
+    $(this).css({ "background-image": "url(" + bg + ")" });
+  });
+
+  $(document).on("click touch", ".o-card-headerList--openIcons", function(e) {
+    $(this).parent().toggleClass("isOpen");
+    $(this).parent().next().toggleClass("isOpen");
+    var btnOffset = $(this).offset(),
+    xPos = e.pageX - btnOffset.left,
+    yPos = e.pageY - btnOffset.top;
+    //console.log(xPos +' / '+ yPos);
+    return false;
+  });
+  
+  $(document).on("click touch", ".o-card-headerList li", function(e) {
+    e.stopPropagation();
+    return false;
+  });
+  
+  $(document).on("click touch", function() {
+    $(".o-card-headerList,.o-card_logo").removeClass("isOpen");
+  });
+  
+  $('.o-card_paragraph').each(function(){
+    var _this = $(this);
+    var pHeight = _this.height();
+    _this.after('<span class="a-more"></span>')
+  });
+  
+  $(document).on( 'click' , '.a-more' , function(){
+    $(this).prev('p').toggleClass('isToggle');
+    $(this).toggleClass('isActive');
+  });
+  
+  $('.a-readMore').on('click touch', function(event) {
+    event.preventDefault();
+    $(id_target).find('.o-modal__close').attr('data-close','');
+    var this_target = $(this).attr('data-href');
+    var _this = $(this);
+    var id_target = '#'+this_target.replace(/\./g,'');
+    $(id_target).find('.a-loader').show();
+    $(id_target).find('.o-modal__close').attr('data-close',id_target);
+    
+    $.ajax({
+        url: 'https://en.wikipedia.org/w/api.php',
+        data: {
+            format: 'json',
+            action: 'parse',
+            page: this_target,
+            prop:'text',
+            section:0,
+        },
+        dataType: 'jsonp',
+        success: function (data) {
+        //console.log(data)
+        $(id_target).find('.o-modal__inner').html('');
+        $(id_target).find('.o-modal__title').html('').hide();    
+        $(id_target).find('.o-modal').addClass('isOpen');
+        if(!$(id_target).find('.a-more').hasClass('isActive')){
+            $(id_target).find('.a-more').trigger('click');
+         }
+        var markup = data.parse.text['*'];
+        var i = $('<div></div>').html(markup);
+        i.find('a').each(function() { $(this).replaceWith($(this).html()); });
+        i.find('sup').remove();
+        i.find('.mw-ext-cite-error').remove();
+         setTimeout(function() {
+            $(id_target).find('.o-modal__title').html( data.parse.title).fadeIn(300);
+            $(id_target).find('.o-modal__inner').html($(i).find('p'));
+            $(id_target).find('.a-loader').hide();
+          }, 1000);
+        }
+    });
+  });
+  
+  $('.o-modal__close').on('click touch', function(){
+    var close_target = $(this).attr('data-close');
+    $(close_target).find('.o-modal').removeClass('isOpen');
+    $(close_target).find('.o-modal__inner').html('');
+    $(close_target).find('.o-modal__title').html('').hide();       
+    $(close_target).find('.a-more').trigger('click');
+  });
+  
+});
+
+
+$('.navTrigger').click(function () {  $("#search").fadeOut()
+
+    $(this).toggleClass('active');
+    $("#mainListDiv").toggleClass("show_list");
+    $("#mainListDiv").fadeIn();
+
+});
+// $('.carousel').carousel({
+//     interval: 500
+//   })
+
+
+
+
+
+
+  var $cell = $('.card');
+
+//open and close card when clicked on card
+$cell.find('.js-expander').click(function() {
+
+  var $thisCell = $(this).closest('.card');
+
+  if ($thisCell.hasClass('is-collapsed')) {
+    $cell.not($thisCell).removeClass('is-expanded').addClass('is-collapsed').addClass('is-inactive');
+    $thisCell.removeClass('is-collapsed').addClass('is-expanded');
+    
+    if ($cell.not($thisCell).hasClass('is-inactive')) {
+      //do nothing
+    } else {
+      $cell.not($thisCell).addClass('is-inactive');
+    }
+
+  } else {
+    $thisCell.removeClass('is-expanded').addClass('is-collapsed');
+    $cell.not($thisCell).removeClass('is-inactive');
+  }
+});
+
+//close card when click on cross
+$cell.find('.js-collapser').click(function() {
+
+  var $thisCell = $(this).closest('.card');
+
+  $thisCell.removeClass('is-expanded').addClass('is-collapsed');
+  $cell.not($thisCell).removeClass('is-inactive');
+
+});
+
+
+
+
+
+$(window).on("load", function() {
+    //console.log(view);
+    $(".o-card_headerHeroImg").each(function() {
+      var bg = $(this).attr("data-image");
+      $(this).css({ "background-image": "url(" + bg + ")" });
+    });
+  
+    $(document).on("click touch", ".o-card-headerList--openIcons", function(e) {
+      $(this).parent().toggleClass("isOpen");
+      $(this).parent().next().toggleClass("isOpen");
+      var btnOffset = $(this).offset(),
+      xPos = e.pageX - btnOffset.left,
+      yPos = e.pageY - btnOffset.top;
+      //console.log(xPos +' / '+ yPos);
+      return false;
+    });
+    
+    $(document).on("click touch", ".o-card-headerList li", function(e) {
+      e.stopPropagation();
+      return false;
+    });
+    
+    $(document).on("click touch", function() {
+      $(".o-card-headerList,.o-card_logo").removeClass("isOpen");
+    });
+    
+    $('.o-card_paragraph').each(function(){
+      var _this = $(this);
+      var pHeight = _this.height();
+      _this.after('<span class="a-more"></span>')
+    });
+    
+    $(document).on( 'click' , '.a-more' , function(){
+      $(this).prev('p').toggleClass('isToggle');
+      $(this).toggleClass('isActive');
+    });
+    
+    $('.a-readMore').on('click touch', function(event) {
+      event.preventDefault();
+      $(id_target).find('.o-modal__close').attr('data-close','');
+      var this_target = $(this).attr('data-href');
+      var _this = $(this);
+      var id_target = '#'+this_target.replace(/\./g,'');
+      $(id_target).find('.a-loader').show();
+      $(id_target).find('.o-modal__close').attr('data-close',id_target);
+      
+      $.ajax({
+          url: 'https://en.wikipedia.org/w/api.php',
+          data: {
+              format: 'json',
+              action: 'parse',
+              page: this_target,
+              prop:'text',
+              section:0,
+          },
+          dataType: 'jsonp',
+          success: function (data) {
+          //console.log(data)
+          $(id_target).find('.o-modal__inner').html('');
+          $(id_target).find('.o-modal__title').html('').hide();    
+          $(id_target).find('.o-modal').addClass('isOpen');
+          if(!$(id_target).find('.a-more').hasClass('isActive')){
+              $(id_target).find('.a-more').trigger('click');
+           }
+          var markup = data.parse.text['*'];
+          var i = $('<div></div>').html(markup);
+          i.find('a').each(function() { $(this).replaceWith($(this).html()); });
+          i.find('sup').remove();
+          i.find('.mw-ext-cite-error').remove();
+           setTimeout(function() {
+              $(id_target).find('.o-modal__title').html( data.parse.title).fadeIn(300);
+              $(id_target).find('.o-modal__inner').html($(i).find('p'));
+              $(id_target).find('.a-loader').hide();
+            }, 1000);
+          }
+      });
+    });
+    
+    $('.o-modal__close').on('click touch', function(){
+      var close_target = $(this).attr('data-close');
+      $(close_target).find('.o-modal').removeClass('isOpen');
+      $(close_target).find('.o-modal__inner').html('');
+      $(close_target).find('.o-modal__title').html('').hide();       
+      $(close_target).find('.a-more').trigger('click');
+    });
+    
+  });
+  
+
+
+  $(window).on("load", function() {
+  //console.log(view);
+  $(".o-card_headerHeroImg").each(function() {
+    var bg = $(this).attr("data-image");
+    $(this).css({ "background-image": "url(" + bg + ")" });
+  });
+
+  $(document).on("click touch", ".o-card-headerList--openIcons", function(e) {
+    $(this).parent().toggleClass("isOpen");
+    $(this).parent().next().toggleClass("isOpen");
+    var btnOffset = $(this).offset(),
+    xPos = e.pageX - btnOffset.left,
+    yPos = e.pageY - btnOffset.top;
+    //console.log(xPos +' / '+ yPos);
+    return false;
+  });
+  
+  $(document).on("click touch", ".o-card-headerList li", function(e) {
+    e.stopPropagation();
+    return false;
+  });
+  
+  $(document).on("click touch", function() {
+    $(".o-card-headerList,.o-card_logo").removeClass("isOpen");
+  });
+  
+  $('.o-card_paragraph').each(function(){
+    var _this = $(this);
+    var pHeight = _this.height();
+    console.log(pHeight);
+    _this.after('<span class="a-more"></span>')
+  });
+  
+  $(document).on( 'click' , '.a-more' , function(){
+    $(this).prev('p').toggleClass('isToggle');
+    $(this).toggleClass('isActive');
+  });
+  
+  $('.a-readMore').on('click touch', function(event) {
+    event.preventDefault();
+    $(id_target).find('.o-modal__close').attr('data-close','');
+    var this_target = $(this).attr('data-href');
+    var _this = $(this);
+    var id_target = '#'+this_target.replace(/\./g,'');
+    console.log(id_target);
+    $(id_target).find('.a-loader').show();
+    $(id_target).find('.o-modal__close').attr('data-close',id_target);
+    
+    $.ajax({
+        url: 'https://en.wikipedia.org/w/api.php',
+        data: {
+            format: 'json',
+            action: 'parse',
+            page: this_target,
+            prop:'text',
+            section:0,
+        },
+        dataType: 'jsonp',
+        success: function (data) {
+        //console.log(data)
+        $(id_target).find('.o-modal__inner').html('');
+        $(id_target).find('.o-modal__title').html('').hide();    
+        $(id_target).find('.o-modal').addClass('isOpen');
+        if(!$(id_target).find('.a-more').hasClass('isActive')){
+            $(id_target).find('.a-more').trigger('click');
+         }
+        var markup = data.parse.text['*'];
+        var i = $('<div></div>').html(markup);
+        i.find('a').each(function() { $(this).replaceWith($(this).html()); });
+        i.find('sup').remove();
+        i.find('.mw-ext-cite-error').remove();
+         setTimeout(function() {
+            $(id_target).find('.o-modal__title').html( data.parse.title).fadeIn(300);
+            $(id_target).find('.o-modal__inner').html($(i).find('p'));
+            $(id_target).find('.a-loader').hide();
+          }, 1000);
+        }
+    });
+  });
+  
+  $('.o-modal__close').on('click touch', function(){
+    var close_target = $(this).attr('data-close');
+    $(close_target).find('.o-modal').removeClass('isOpen');
+    $(close_target).find('.o-modal__inner').html('');
+    $(close_target).find('.o-modal__title').html('').hide();       
+    $(close_target).find('.a-more').trigger('click');
+  });
+  
+});
+
+  </script>
+</head>
+<body >
+    <nav class="nav">
+        <div class="container" style="z-index: 100;">
+            <div class="logo" style="z-index: 100;">
+                <a href="#">Your Logo</a>
+            </div>
+            <div id="mainListDiv" class="main_list" style="z-index: 100;">
+                <ul class="navlinks" style="z-index: 100;">
+                    <li><a href="#">Haqqımızda</a></li>
+                    <li><a href="#">Kurslar</a></li>
+                    <li><a href="#">Online Ödəniş</a></li>
+                    <li><a href="#">Sertifikatlaşma</a></li>
+                    <li><a href="#">Bizimlə Əlaqə</a></li>
+                    <li class="wrap" id="search">
+   <div class="search" style="z-index: 100;">
+      <input type="text" class="searchTerm" placeholder="Axtarış">
+      <button type="submit" class="searchButton">
+        <i class="fa fa-search"></i>
+     </button>
+   </div>
+</li>
+                </ul>
+            
+            </div>
+            <span class="navTrigger">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+        </div>
+    </nav>
+
+    <section class="home">
+    </section>
+    <!-- <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img class="d-block w-100" src="https://www.industrialempathy.com/img/remote/ZiClJf-1920w.jpg" alt="First slide">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg" alt="Second slide">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg" alt="Third slide">
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div> -->
+   
+<div>
+  
+    <div class="wrapper">
+
+        <div class="header">
+          <h1 class="header__title">Kategoriyalar</h1>
+        </div>
+      
+        <div class="cards">
+      
+          <div class=" card [ is-collapsed ] " style="z-index:0" >
+            <div class="card__inner [ js-expander ]">
+              <span>Maliyyə Hesabatları</span>
+            </div>
+         
+          </div>
+      
+          <div class=" card [ is-collapsed ] " style="z-index:0">
+            <div class="card__inner [ js-expander ]">
+              <span>Card</span>
+            </div>
+     
+          </div>
+      
+          <div class=" card [ is-collapsed ] " style="z-index:0">
+            <div class="card__inner [ js-expander ]">
+              <span>Card</span>
+            </div>
+      
+          </div>
+      
+          <div class=" card [ is-collapsed ] " style="z-index:0">
+            <div class="card__inner [ js-expander ]">
+              <span>Card</span>
+            </div>
+            <div class="card__expander">
+              <i class="fa fa-close [ js-collapser ]"></i>
+              Expander
+            </div>
+          </div>
+      
+          <div class=" card [ is-collapsed ] " style="z-index:0">
+            <div class="card__inner [ js-expander ]">
+              <span>Card</span>
+            </div>
+            <div class="card__expander">
+              <i class="fa fa-close [ js-collapser ]"></i>
+              Expander
+            </div>
+          </div>
+      
+          <div class=" card [ is-collapsed ] " style="z-index:0">
+            <div class="card__inner [ js-expander ]">
+              <span>Card</span>
+            </div>
+            <div class="card__expander">
+              <i class="fa fa-close [ js-collapser ]"></i>
+              Expander
+            </div>
+          </div>
+      
+          <div class=" card [ is-collapsed ] " style="z-index:0">
+            <div class="card__inner [ js-expander ]">
+              <span>Card</span>
+            </div>
+            <div class="card__expander">
+              <i class="fa fa-close [ js-collapser ]"></i>
+              Expander
+            </div>
+          </div>
+      
+          <div class=" card [ is-collapsed ] " style="z-index:0">
+            <div class="card__inner [ js-expander ]">
+              <span>Maliyyə Hesabatları</span>
+            </div>
+            <div class="card__expander">
+              <i class="fa fa-close [ js-collapser ]"></i>
+              Expander
+            </div>
+          </div>
+      
+          <div class=" card [ is-collapsed ] " style="z-index:0">
+            <div class="card__inner [ js-expander ]">
+              <span>Card</span>
+            </div>
+            <div class="card__expander">
+              <i class="fa fa-close [ js-collapser ]"></i>
+              Expander
+            </div>
+        </div>
+        <div class=" card [ is-collapsed ] " style="z-index:0">
+         <div class="card__inner [ js-expander ]">
+           <span>Card</span>
+         </div>
+         <div class="card__expander">
+           <i class="fa fa-close [ js-collapser ]"></i>
+           Expander
+         </div>
+       </div>
+       <div class=" card [ is-collapsed ] " style="z-index:0">
+         <div class="card__inner [ js-expander ]">
+           <span>Card</span>
+         </div>
+         <div class="card__expander">
+           <i class="fa fa-close [ js-collapser ]"></i>
+           Expander
+         </div>
+       </div>
+       <div class=" card [ is-collapsed ] " style="z-index:0">
+         <div class="card__inner [ js-expander ]">
+           <span>Card</span>
+         </div>
+         <div class="card__expander">
+           <i class="fa fa-close [ js-collapser ]"></i>
+           Expander
+         </div>
+       </div>
+       <div class=" card [ is-collapsed ] " style="z-index:0">
+         <div class="card__inner [ js-expander ]">
+           <span>Card</span>
+         </div>
+         <div class="card__expander">
+           <i class="fa fa-close [ js-collapser ]"></i>
+           Expander
+         </div>
+       </div>
+       <div class=" card [ is-collapsed ] " style="z-index:0">
+         <div class="card__inner [ js-expander ]">
+           <span>Card</span>
+         </div>
+         <div class="card__expander">
+           <i class="fa fa-close [ js-collapser ]"></i>
+           Expander
+         </div>
+       </div>
+       <div class=" card [ is-collapsed ] " style="z-index:0">
+         <div class="card__inner [ js-expander ]">
+           <span>Card</span>
+         </div>
+         <div class="card__expander">
+           <i class="fa fa-close [ js-collapser ]"></i>
+           Expander
+         </div>
+       </div>
+       <div class=" card [ is-collapsed ] " style="z-index:0">
+         <div class="card__inner [ js-expander ]">
+           <span>Card</span>
+         </div>
+         <div class="card__expander">
+           <i class="fa fa-close [ js-collapser ]"></i>
+           Expander
+         </div>
+       </div>
+        </div>
+      
+      </div>
+
+</div>
+
+<div class="a-container">
+    <h1 style="text-align:center;margin-bottom: 5rem;" >Kurslar</h1>
+    <div class="o-card_container">
+       <div class="o-card" id="Nikola_Tesla">
+          <div class="o-card_header">
+             <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2016/09/excel-1024x768.jpg"></div>
+             <ul class="o-card-headerList">
+                <li class="o-card-headerList--openIcons ">
+                   <span></span>
+                   <span></span>
+                   <span></span>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+                </li>
+             </ul>
+          </div>
+          <div class="o-card_body">
+             <h2 class="o-card_title">Microsoft Excel</h2>
+             <h3 class="o-card_subTitle">The Misunderstood</h3>
+             <p class="o-card_paragraph">Nikola Tesla (Serbian Cyrillic: Никола Тесла; 10 July 1856 – 7 January 1943) was a Serbian-American inventor, electrical engineer, mechanical engineer, physicist, and futurist who is best known for his contributions to the design of the modern alternating current (AC) electricity supply system.
+                Born and raised in the Austrian Empire, Tesla received an advanced education in engineering and physics in the 1870s and gained practical experience in the early 1880s working in ......
+             </p>
+          </div>
+          <div class="o-card_footer">
+             <a data-href="Nikola_Tesla" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+          </div>
+          <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+          <div class="o-modal">
+             <span class="o-modal__close">
+             <i class="icon-cancel-circled"></i>
+             </span>
+             <h2 class="o-modal__title"></h2>
+             <div class="o-modal__inner"></div>
+          </div>
+          <div class="a-loader">
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+          </div>
+       </div>
+       <div class="o-card" id="Ernest_Hemingway">
+          <div class="o-card_header">
+             <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2016/09/VBAnew-1024x768.jpg"></div>
+             <ul class="o-card-headerList">
+                <li class="o-card-headerList--openIcons ">
+                   <span></span>
+                   <span></span>
+                   <span></span>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+                </li>
+             </ul>
+          </div>
+          <div class="o-card_body">
+             <h2 class="o-card_title">Ernest Hemingway</h2>
+             <h3 class="o-card_subTitle">The Brave</h3>
+             <p class="o-card_paragraph">Ernest Miller Hemingway (July 21, 1899 – July 2, 1961) was an American novelist, short story writer, and journalist. His economical and understated style had a strong influence on 20th-century fiction, while his life of adventure and his public image influenced later generations. Hemingway produced most of his work between the mid-1920s and the mid-1950s, and won the Nobel Prize in Literature in 1954. He published seven novels, six short story collections, and two non-fiction works....</p>
+          </div>
+          <div class="o-card_footer">
+             <a data-href="Ernest_Hemingway" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+          </div>
+          <div class="o-card_footer">
+            <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+ 
+         </div>
+          <div class="o-modal">
+             <span class="o-modal__close">
+             <i class="icon-cancel-circled"></i>
+             </span>
+             <h2 class="o-modal__title"></h2>
+             <div class="o-modal__inner"></div>
+          </div>
+          <div class="a-loader">
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+          </div>
+       </div>
+       <div class="o-card" id="J_R_R_Tolkien">
+          <div class="o-card_header">
+             <div class="o-card_headerHeroImg"  data-image="http://innab.org/file/2016/09/m%C3%BChasib.jpg"></div>
+             <ul class="o-card-headerList">
+                <li class="o-card-headerList--openIcons ">
+                   <span></span>
+                   <span></span>
+                   <span></span>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+                </li>
+             </ul>
+          </div>
+          <div class="o-card_body">
+             <h2 class="o-card_title">J. R. R. Tolkien</h2>
+             <h3 class="o-card_subTitle">The Visionary</h3>
+             <p class="o-card_paragraph">John Ronald Reuel Tolkien, CBE, FRSL (/ˈtɒlkiːn/;[a] 3 January 1892 – 2 September 1973) was an English writer, poet, philologist, and university professor who is best known as the author of the classic high-fantasy works The Hobbit, The Lord of the Rings, and The Silmarillion.
+                He served as the Rawlinson and Bosworth Professor of Anglo-Saxon and Fellow of Pembroke College, Oxford, from 1925 to 1945 and Merton Professor of English Language and Literature and Fellow of Merton College....
+             </p>
+          </div>
+          <div class="o-card_footer">
+             <a data-href="J._R._R._Tolkien" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+          </div>
+          <div class="o-card_footer">
+            <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+ 
+         </div>
+          <div class="o-modal">
+             <span class="o-modal__close">
+             <i class="icon-cancel-circled"></i>
+             </span>
+             <h2 class="o-modal__title"></h2>
+             <div class="o-modal__inner"></div>
+          </div>
+          <div class="a-loader">
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+          </div>
+       </div>
+       <div class="o-card" id="Malcolm_X">
+          <div class="o-card_header">
+             <div class="o-card_headerHeroImg"  data-image="http://innab.org/file/2016/09/acca-f3.jpg"></div>
+             <ul class="o-card-headerList">
+                <li class="o-card-headerList--openIcons ">
+                   <span></span>
+                   <span></span>
+                   <span></span>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+                </li>
+             </ul>
+          </div>
+          <div class="o-card_body">
+             <h2 class="o-card_title">Malcom X</h2>
+             <h3 class="o-card_subTitle">The Necessary</h3>
+             <p class="o-card_paragraph">Malcolm X (/ˈmælkəm ˈɛks/; May 19, 1925 – February 21, 1965), born Malcolm Little and later also known as el-Hajj Malik el-Shabazz[A] (Arabic: الحاجّ مالك الشباز‎‎; Arabic pronunciation: [ɛl-hæʤ ˈmælɪk ɛl-ˈʃɑbɑz]), was an African-American Muslim minister and human rights activist. To his admirers he was a courageous advocate for the rights of blacks, a man who indicted white America in the harshest terms for its crimes against black Americans; detractors accused him of preaching racism and violence....</p>
+          </div>
+          <div class="o-card_footer">
+             <a data-href="Malcolm_X" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+          </div>
+          <div class="o-card_footer">
+            <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+ 
+         </div>
+          <div class="o-modal">
+             <span class="o-modal__close">
+             <i class="icon-cancel-circled"></i>
+             </span>
+             <h2 class="o-modal__title"></h2>
+             <div class="o-modal__inner"></div>
+          </div>
+          <div class="a-loader">
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+          </div>
+       </div>
+       <div class="o-card" id="George_Orwell">
+          <div class="o-card_header">
+             <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/03/biznes-768x576.png"></div>
+             <ul class="o-card-headerList">
+                <li class="o-card-headerList--openIcons ">
+                   <span></span>
+                   <span></span>
+                   <span></span>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+                </li>
+             </ul>
+          </div>
+          <div class="o-card_body">
+             <h2 class="o-card_title">George Orwell</h2>
+             <h3 class="o-card_subTitle">The Warrior</h3>
+             <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+                Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+             </p>
+          </div>
+          <div class="o-card_footer">
+             <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+          </div>
+          <div class="o-card_footer">
+            <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+ 
+         </div>
+          <div class="o-modal">
+             <span class="o-modal__close">
+             <i class="icon-cancel-circled"></i>
+             </span>
+             <h2 class="o-modal__title"></h2>
+             <div class="o-modal__inner"></div>
+          </div>
+          <div class="a-loader">
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+          </div>
+       </div>
+       <div class="o-card" id="Albert_Einstein">
+          <div class="o-card_header">
+             <div class="o-card_headerHeroImg"  data-image="http://innab.org/file/2020/03/Vergi-ucotu.png"></div>
+             <ul class="o-card-headerList">
+                <li class="o-card-headerList--openIcons ">
+                   <span></span>
+                   <span></span>
+                   <span></span>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+                </li>
+                <li class="o-card-headerList--item">
+                   <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+                </li>
+             </ul>
+          </div>
+          <div class="o-card_body">
+             <h2 class="o-card_title">Albert Einstein</h2>
+             <h3 class="o-card_subTitle">The forerunner</h3>
+             <p class="o-card_paragraph">Albert Einstein (/ˈaɪnstaɪn/;[4] German: [ˈalbɛɐ̯t ˈaɪnʃtaɪn] ( listen); 14 March 1879 – 18 April 1955) was a German-born theoretical physicist. He developed the theory of relativity, one of the two pillars of modern physics (alongside quantum mechanics).[1][5]:274 Einstein's work is also known for its influence on the philosophy of science.[6][7] Einstein is best known by the general public for his mass–energy equivalence formula E = mc2 (which has been dubbed "the world's most famous equation")....</p>
+          </div>
+          <div class="o-card_footer">
+             <a data-href="Albert_Einstein" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+          </div>
+          <div class="o-card_footer">
+            <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+ 
+         </div>
+          <div class="o-modal">
+             <span class="o-modal__close">
+             <i class="icon-cancel-circled"></i>
+             </span>
+             <h2 class="o-modal__title"></h2>
+             <div class="o-modal__inner"></div>
+          </div>
+          <div class="a-loader">
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+             <div class="a-loader__bar"></div>
+          </div>
+       </div>
+       <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/02/spss-sayt-768x576.jpg"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2018/11/statistikaa-01-1024x768.jpg"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/02/power-bi-sayt-768x576.png"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/02/Tableau-sayt-768x576.png"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/01/R-768x576.png"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/01/Biznes-768x576.png"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/03/ingilis-dili-768x576.png"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/04/sayt-768x576.png"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/03/site-768x576.png"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/06/HR-data-analitikasi-sayt-768x576.jpg"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/06/Untitled-1-768x576.png"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/03/Python-768x576.png"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/06/mose-sayt-768x576.jpg"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2016/09/ppt-768x576.jpg"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="George_Orwell">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2021/01/Biznes-768x576.png"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">George Orwell</h2>
+           <h3 class="o-card_subTitle">The Warrior</h3>
+           <p class="o-card_paragraph">Eric Arthur Blair (25 June 1903 – 21 January 1950),[1] better known by his pen name George Orwell, was an English novelist, essayist, journalist, and critic. His work is marked by lucid prose, awareness of social injustice, opposition to totalitarianism, and outspoken support of democratic socialism.[2][3]
+              Orwell wrote literary criticism, poetry, fiction, and polemical journalism. He is best known for the allegorical novella Animal Farm (1945) and the dystopian novel Nineteen Eighty-Four (1949)....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="George_Orwell" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+
+
+
+   <div class="o-card_footer">
+           <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+        </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="J_R_R_Tolkien">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2016/09/vvord-768x576.jpg"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">J. R. R. Tolkien</h2>
+           <h3 class="o-card_subTitle">The Visionary</h3>
+           <p class="o-card_paragraph">John Ronald Reuel Tolkien, CBE, FRSL (/ˈtɒlkiːn/;[a] 3 January 1892 – 2 September 1973) was an English writer, poet, philologist, and university professor who is best known as the author of the classic high-fantasy works The Hobbit, The Lord of the Rings, and The Silmarillion.
+              He served as the Rawlinson and Bosworth Professor of Anglo-Saxon and Fellow of Pembroke College, Oxford, from 1925 to 1945 and Merton Professor of English Language and Literature and Fellow of Merton College....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="J._R._R._Tolkien" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+        <div class="o-card_footer">
+          <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+       </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="J_R_R_Tolkien">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/wp-content/uploads/2016/09/risk-1024x768.jpg"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">J. R. R. Tolkien</h2>
+           <h3 class="o-card_subTitle">The Visionary</h3>
+           <p class="o-card_paragraph">John Ronald Reuel Tolkien, CBE, FRSL (/ˈtɒlkiːn/;[a] 3 January 1892 – 2 September 1973) was an English writer, poet, philologist, and university professor who is best known as the author of the classic high-fantasy works The Hobbit, The Lord of the Rings, and The Silmarillion.
+              He served as the Rawlinson and Bosworth Professor of Anglo-Saxon and Fellow of Pembroke College, Oxford, from 1925 to 1945 and Merton Professor of English Language and Literature and Fellow of Merton College....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="J._R._R._Tolkien" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+        <div class="o-card_footer">
+          <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+       </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+     <div class="o-card" id="J_R_R_Tolkien">
+        <div class="o-card_header">
+           <div class="o-card_headerHeroImg"  data-image="http://innab.org/file/2019/11/Satis.jpg"></div>
+           <ul class="o-card-headerList">
+              <li class="o-card-headerList--openIcons ">
+                 <span></span>
+                 <span></span>
+                 <span></span>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-facebook"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-twitter"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-linkedin"></i></a>
+              </li>
+              <li class="o-card-headerList--item">
+                 <a class="o-card-headerList--link" href="#"><i class="icon-github"></i></a>
+              </li>
+           </ul>
+        </div>
+        <div class="o-card_body">
+           <h2 class="o-card_title">J. R. R. Tolkien</h2>
+           <h3 class="o-card_subTitle">The Visionary</h3>
+           <p class="o-card_paragraph">John Ronald Reuel Tolkien, CBE, FRSL (/ˈtɒlkiːn/;[a] 3 January 1892 – 2 September 1973) was an English writer, poet, philologist, and university professor who is best known as the author of the classic high-fantasy works The Hobbit, The Lord of the Rings, and The Silmarillion.
+              He served as the Rawlinson and Bosworth Professor of Anglo-Saxon and Fellow of Pembroke College, Oxford, from 1925 to 1945 and Merton Professor of English Language and Literature and Fellow of Merton College....
+           </p>
+        </div>
+        <div class="o-card_footer">
+           <a data-href="J._R._R._Tolkien" target="_blank" class="a-readMore" style="color:white" data-modal="#first">Ətraflı </a>
+
+        </div>
+        <div class="o-card_footer">
+          <a data-href="" target="_blank" class="a-apply" style="color:white" data-modal="#first">Müraciət Et </a>
+
+       </div>
+        <div class="o-modal">
+           <span class="o-modal__close">
+           <i class="icon-cancel-circled"></i>
+           </span>
+           <h2 class="o-modal__title"></h2>
+           <div class="o-modal__inner"></div>
+        </div>
+        <div class="a-loader">
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+           <div class="a-loader__bar"></div>
+        </div>
+     </div>
+    </div>
+ </div>
+ </div>
+ 
+<!-- <div class="blog-card">
+    <div class="meta">
+      <div class="photo" style="background-image: url(http://innab.org/wp-content/uploads/2016/09/excel-1024x768.jpg)"></div>
+      <ul class="details">
+        <li class="author"><a href="#">John Doe</a></li>
+        <li class="date">Aug. 24, 2015</li>
+        <li class="tags">
+          <ul>
+            <li><a href="#">Learn</a></li>
+            <li><a href="#">Code</a></li>
+            <li><a href="#">HTML</a></li>
+            <li><a href="#">CSS</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="description">
+      <h1>Microsoft Excel</h1>
+      <h2>Opening a door to the future</h2>
+      <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad eum dolorum architecto obcaecati enim dicta praesentium, quam nobis! Neque ad aliquam facilis numquam. Veritatis, sit.</p>
+      <p class="read-more">
+        <a href="#">Ətraflı</a>
+      </p>
+    </div>
+  </div> -->
+  <!-- <div class="blog-card alt">
+    <div class="meta">
+      <div class="photo" style="background-image: url(http://innab.org/file/2016/09/m%C3%BChasib.jpg)"></div>
+      <ul class="details">
+      
+      </ul>
+    </div>
+    <div class="description">
+      <h1>Mastering the Language</h1>
+      <h2>Java is not the same as JavaScript</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad eum dolorum architecto obcaecati enim dicta praesentium, quam nobis! Neque ad aliquam facilis numquam. Veritatis, sit.</p>
+      <p class="read-more">
+        <a href="#">Ətraflı</a>
+      </p>
+    </div>
+  </div> -->
+  <!-- <div class="blog-card">
+    <div class="meta">
+      <div class="photo" style="background-image: url(http://innab.org/file/2020/03/Vergi-ucotu.png)"></div>
+      <ul class="details">
+
+      </ul>
+    </div>
+    <div class="description">
+      <h1>Vergi Uçotu</h1>
+      <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad eum dolorum architecto obcaecati enim dicta praesentium, quam nobis! Neque ad aliquam facilis numquam. Veritatis, sit.</p>
+      <p class="read-more">
+        <a href="#">Ətraflı</a>
+      </p>
+    </div>
+  </div>
+  <div class="blog-card alt">
+    <div class="meta">
+      <div class="photo" style="background-image: url(http://innab.org/wp-content/uploads/2018/11/statistikaa-01-1024x768.jpg)"></div>
+      <ul class="details">
+      
+      </ul>
+    </div>
+    <div class="description">
+      <h1>SQL</h1>
+      <h2>Java is not the same as JavaScript</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad eum dolorum architecto obcaecati enim dicta praesentium, quam nobis! Neque ad aliquam facilis numquam. Veritatis, sit.</p>
+      <p class="read-more">
+        <a href="#">Ətraflı</a>
+      </p>
+    </div>
+  </div>
+  <div class="blog-card">
+    <div class="meta">
+      <div class="photo" style="background-image: url(http://innab.org/wp-content/uploads/2021/01/Biznes-768x576.png)"></div>
+      <ul class="details">
+     
+      </ul>
+    </div>
+    <div class="description">
+      <h1>Biznes Statistikası</h1>
+      <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad eum dolorum architecto obcaecati enim dicta praesentium, quam nobis! Neque ad aliquam facilis numquam. Veritatis, sit.</p>
+      <p class="read-more">
+        <a href="#">Ətraflı</a>
+      </p>
+    </div>
+  </div>
+  <div class="blog-card alt">
+    <div class="meta">
+      <div class="photo" style="background-image: url(http://innab.org/wp-content/uploads/2021/03/biznes-768x576.png)"></div>
+      <ul class="details">
+
+      </ul>
+    </div>
+    <div class="description">
+      <h1>Biznes Proseslərinin idarə edilməsi</h1>
+      <h2>Java is not the same as JavaScript</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad eum dolorum architecto obcaecati enim dicta praesentium, quam nobis! Neque ad aliquam facilis numquam. Veritatis, sit.</p>
+      <p class="read-more">
+        <a href="#">Ətraflı</a>
+      </p>
+    </div>
+  </div> -->
+  
+  <div class="info-container ">
+    <div class="cards info">
+      <div class="card-item">
+        <div class="card-image">
+            <img src="http://innab.org/wp-content/uploads/2015/06/Sertifikasiya--1536x1536.png">
+        </div>
+        <div class="card-info">
+          <h2 class="card-title" style="text-align: center;">Exploring around</h2>
+        </div>
+      </div>
+    </div>
+    <div class="cards info">
+      <div class="card-item">
+        <div class="card-image" >
+            <img src="http://innab.org/wp-content/uploads/2016/09/198686493_4497518463591634_4824552999934198865_n.jpg">
+        </div>
+        <div class="card-info">
+          <h2 class="card-title" style="text-align: center;">A new trail you can't miss</h2>
+        </div>
+      </div>
+    </div>
+   
+    <div class="cards info">
+      <div class="card-item">
+        <div class="card-image" >
+            <img src="http://innab.org/wp-content/uploads/2015/06/1C-Qutu--1536x1536.png">
+        </div>
+        <div class="card-info">
+          <h2 class="card-title" style="text-align: center;">1 Day routes for this weekend</h2>
+        </div>
+      </div>
+    </div>
+    <div class="cards info">
+      <div class="card-item">
+        <div class="card-image" >
+            <img src="http://innab.org/wp-content/uploads/2017/05/alo-excel-yeni.jpg">
+        </div>
+        <div class="card-info">
+          <h2 class="card-title" style="text-align: center;">1 Day routes for this weekend</h2>
+        </div>
+      </div>
+    </div>
+    <div class="cards info">
+      <div class="card-item">
+        <div class="card-image">
+            <img src="http://innab.org/wp-content/uploads/2015/06/Sertifikasiya--1536x1536.png">
+        </div>
+        <div class="card-info">
+          <h2 class="card-title" style="text-align: center;">Exploring around</h2>
+        </div>
+      </div>
+    </div>
+    <div class="cards info">
+      <div class="card-item">
+        <div class="card-image" >
+            <img src="http://innab.org/wp-content/uploads/2016/09/198686493_4497518463591634_4824552999934198865_n.jpg">
+        </div>
+        <div class="card-info">
+        </div>
+      </div>
+    </div>
+  </div>
+    <div id="logo-grid">
+      <div class="partner-logo"><a href="https://www.bayer.com" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/38.png" /></a></div>
+      <div class="partner-logo"><a href="http://www.columbia.edu" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/42.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.lilly.com" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/41.png" /></a></div>
+      <div class="partner-logo"><a href="http://www.emdserono.com" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/1.png" /></a></div>
+      <div class="partner-logo"><a href="http://www.janssen.com" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/3.png" /></a></div>
+      <div class="partner-logo"><a href="https://mellon.org" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/6.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.moore.org" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/7.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/11.png" /></a></div>
+      <div class="partner-logo"><img src="http://innab.org/wp-content/uploads/2020/04/8.png" /></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/10.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/11.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/12.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/13.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/14.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/15.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/16.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/17.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/18.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/19.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/20.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/21.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/22.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/23.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/24.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/25.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/26.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/27.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/28.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/29.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/30.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/31.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/32.png" /></a></div>
+      <div class="partner-logo"><a href="https://www.nih.gov" target="_blank"><img src="http://innab.org/wp-content/uploads/2020/04/33.png" /></a></div>
+    
+    </div>
+     <footer id="footer" class="footer-1">
+        <div class="main-footer widgets-dark typo-light">
+        <div class="container">
+        <div class="row">
+          
+        <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="widget subscribe no-box">
+        <h5 class="widget-title">COMPANY NAME<span></span></h5>
+        <p class="footer-data">About the company, little discription will goes here.. </p>
+        </div>
+        </div>
+        
+        <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="widget no-box">
+        <h5 class="widget-title">Quick Links<span></span></h5>
+        <ul class="thumbnail-widget">
+        <li>
+        <div class="thumb-content footer-data"><a href="#.">Get Started</a></div>	
+        </li>
+        <li>
+        <div class="thumb-content footer-data"><a href="#.">Top Leaders</a></div>	
+        </li>
+        <li>
+        <div class="thumb-content footer-data"><a href="#.">Success Stories</a></div>	
+        </li>
+        <li>
+        <div class="thumb-content footer-data"><a href="#.">Event/Tickets</a></div>	
+        </li>
+        <li>
+        <div class="thumb-content footer-data"><a href="#.">News</a></div>	
+        </li>
+        <li>
+        <div class="thumb-content footer-data"><a href="#.">Lifestyle</a></div>	
+        </li>
+        <li>
+        <div class="thumb-content footer-data"><a href="#.">About</a></div>	
+        </li>
+        </ul>
+        </div>
+        </div>
+        
+
+        <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="widget no-box">
+        <h5 class="widget-title footer-header">Get Started<span></span></h5>
+        <p class="footer-data">Get access to your full Training and Marketing Suite.</p>
+        <a class="btn" href="https://www.youtube.com/channel/UC_osRDuNAp1ZZxKckdKlNsw?sub_confirmation=1" target="_blank">Subscribe Now</a>
+        </div>
+        </div>
+        
+        <div class="col-xs-12 col-sm-6 col-md-3">
+        
+        <div class="widget no-box">
+        <h5 class="widget-title">Contact Us<span></span></h5>
+        
+        <p class="footer-data"><a href="mailto:info@domain.com" title="glorythemes">info@domain.com</a></p>
+        <ul class="social-footer2">
+        <li class=""><a title="youtube" target="_blank" href="https://www.youtube.com/channel/UC_osRDuNAp1ZZxKckdKlNsw?sub_confirmation=1"><img alt="youtube" width="30" height="30" src="data:image/png;base64,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"></a></li>
+        <li class=""><a href="https://www.facebook.com/" target="_blank" title="Facebook"><img alt="Facebook" width="30" height="30" src="data:image/png;base64,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"></a></li>
+        <li class=""><a href="https://twitter.com" target="_blank" title="Twitter"><img alt="Twitter" width="30" height="30" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYPjGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFostqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuutm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPjthPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofcn8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw33jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgqTXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWFfevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaql+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRSj9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtbYlu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L158Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89HcR/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfyl5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz/GMzLdsAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAAflJREFUeNrsls+LTWEYxz/XlJHxIxrSnVKzMPkxV8PuosTCbJSYRAkxO1az0iz8BZQNspEfJbGwkZpkgWaakhk2I79KYUFJYoSRPhaexXSdc+45NzUL96m3c3qe5/0+73m/z/s9b0llJmwWM2TNwv934blAWw6MDuA0MAZMALeBnRHrBI4By/+apaaNU+q4ujgjp0t9pp5Xu9WyelB9ot5T36qT6rrauWmA89SH6g11TF2TkjekHk/wL1D71Y/+sUvq+jyFO9QH6kL1iPpKHVBbp+WsikW1pWCU1VvqJ7VaG0/j+B3wHVgLnA3OeoH7wCBQATYA74GvKRgtQBnYDYwW4fiCeqfGt0m9qI6qE+rVjPnbgorEeBbHb4Kf/oT4bHWZOj+j8P6shaVt9bfY7n3AlYT4VMS/ZByzCvC66Dn+BVwDDsV7I1YBRhoRkJPAD2Ac6CtYtCca626jkjkMdAPV6NK8NgAMAZ9TMzKaA3WF+kLdXidv+uhVH6mLsvLyAG0JFbupHlVLdST0ubqjHm7erzig/lTPZeRUo+jhPJhJztXqmZDDYXUkpK8vBWSpeiJkdW9eSpKcrepm9bE6pV5Wt6pLgrd2daW6J1TsaTw7C/QBpYxbZguwEdgFdMV/d06IxyTwITT4OvCy6CEvNa+3zcLNwv/Kfg8AhNLfmymksMYAAAAASUVORK5CYII="></a></li>
+        <li class=""><a title="instagram" target="_blank" href="https://www.instagram.com/"><img alt="instagram" width="30" height="30" src="data:image/png;base64,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"></a></li>
+        </ul>
+        </div>
+        </div>
+        
+        </div>
+        </div>
+        </div>
+          
+        <div class="footer-copyright">
+        <div class="container">
+        <div class="row">
+        <div class="col-md-12 text-center">
+        <p class="footer-data">Copyright Company Name © 2021. All rights reserved.</p>
+        </div>
+        </div>
+        </div>
+        </div>
+        </footer>
+    </body>
+  </html>
+</body>
+</html>
